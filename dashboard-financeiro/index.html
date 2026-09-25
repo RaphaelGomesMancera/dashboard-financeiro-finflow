@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Finflow — Dashboard Financeiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="side">
+    <div class="brand">
+      <span class="mark"></span>
+      <span class="brand-name">Finflow</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="geral">
+        <span class="nav-icon">◆</span> Visão geral
+      </button>
+      <button class="nav-item" data-view="transacoes">
+        <span class="nav-icon">▤</span> Transações
+      </button>
+      <button class="nav-item" data-view="relatorios">
+        <span class="nav-icon">◈</span> Relatórios
+      </button>
+    </nav>
+
+    <div class="side-foot">Dados salvos localmente neste navegador.</div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ===== TELA: VISÃO GERAL ===== -->
+    <section class="view active" id="view-geral">
+      <header class="view-head">
+        <h1>Visão geral</h1>
+        <p>Seu resumo financeiro em um só lugar.</p>
+      </header>
+
+      <div class="cards">
+        <div class="card">
+          <span class="card-label">Receitas</span>
+          <span class="card-value ok" id="gReceitas">R$ 0,00</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Despesas</span>
+          <span class="card-value err" id="gDespesas">R$ 0,00</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Saldo</span>
+          <span class="card-value" id="gSaldo">R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Despesas por categoria</h2>
+          <div class="chart-wrap sm"><canvas id="chartGeral"></canvas></div>
+          <p class="empty" id="chartGeralEmpty">Adicione uma despesa para ver o gráfico.</p>
+        </div>
+        <div class="panel">
+          <h2>Últimos lançamentos</h2>
+          <div class="list" id="listaGeral">
+            <p class="empty" id="listaGeralEmpty">Nenhum lançamento ainda.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TELA: TRANSAÇÕES ===== -->
+    <section class="view" id="view-transacoes">
+      <header class="view-head">
+        <h1>Transações</h1>
+        <p>Cadastre e gerencie receitas e despesas.</p>
+      </header>
+
+      <div class="grid-form">
+        <form id="txForm" class="panel form-panel">
+          <h2>Novo lançamento</h2>
+          <div class="segmented">
+            <button type="button" class="seg active" data-tipo="receita">Receita</button>
+            <button type="button" class="seg" data-tipo="despesa">Despesa</button>
+          </div>
+
+          <label for="txDesc">Descrição</label>
+          <input id="txDesc" type="text" required placeholder="Ex: Salário, Aluguel...">
+
+          <label for="txValor">Valor (R$)</label>
+          <input id="txValor" type="number" step="0.01" min="0.01" required placeholder="0,00">
+
+          <label for="txCategoria">Categoria</label>
+          <select id="txCategoria">
+            <option>Moradia</option>
+            <option>Alimentação</option>
+            <option>Transporte</option>
+            <option>Lazer</option>
+            <option>Saúde</option>
+            <option>Salário</option>
+            <option>Outros</option>
+          </select>
+
+          <label for="txData">Data</label>
+          <input id="txData" type="date">
+
+          <button class="primary" type="submit">Adicionar</button>
+        </form>
+
+        <div class="panel">
+          <div class="tx-toolbar">
+            <h2>Todos os lançamentos</h2>
+            <select id="filtroTipo">
+              <option value="todos">Todos</option>
+              <option value="receita">Receitas</option>
+              <option value="despesa">Despesas</option>
+            </select>
+          </div>
+          <div class="list" id="listaCompleta">
+            <p class="empty" id="listaCompletaEmpty">Nenhum lançamento ainda.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TELA: RELATÓRIOS ===== -->
+    <section class="view" id="view-relatorios">
+      <header class="view-head">
+        <h1>Relatórios</h1>
+        <p>Entenda para onde vai o seu dinheiro.</p>
+      </header>
+
+      <div class="cards">
+        <div class="card">
+          <span class="card-label">Maior categoria de gasto</span>
+          <span class="card-value" id="rMaiorCategoria">—</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Ticket médio por despesa</span>
+          <span class="card-value" id="rTicketMedio">R$ 0,00</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Total de lançamentos</span>
+          <span class="card-value" id="rTotalLancamentos">0</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Distribuição de despesas</h2>
+          <div class="chart-wrap"><canvas id="chartRelatorio"></canvas></div>
+          <p class="empty" id="chartRelatorioEmpty">Sem despesas registradas ainda.</p>
+        </div>
+        <div class="panel">
+          <h2>Receitas x Despesas</h2>
+          <div class="chart-wrap"><canvas id="chartComparativo"></canvas></div>
+          <p class="empty" id="chartComparativoEmpty">Adicione lançamentos para comparar.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
